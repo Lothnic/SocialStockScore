@@ -2,11 +2,6 @@ import requests
 
 username = 'lothnic'
 
-url = f'https://api.github.com/users/{username}'
-
-response = requests.get(url)
-data = response.json()
-
 # GH = (commit_score + lang_diversity + stars_score + profile_score)
 
 # Scale each out of:
@@ -15,17 +10,53 @@ data = response.json()
 # stars_score = min(total_stars / 50 * 10, 10)
 # profile_score = 5 if bio and profile picture else 0
 
-if response.status_code == 200:
-    name = data['name']
-    username = data['login']
-    followers = data['followers']
-    following = data['following']
-    public_repos = data['public_repos']
-    
-    print(f"Name: {name}")
-    print(f"Username: {username}")
-    print(f"Followers: {followers}")
-    print(f"Following: {following}")
-    print(f"Public Repos: {public_repos}")
-else:
-    print(f'Error: {response.status_code}')
+def get_user_data(username):
+    url = f'https://api.github.com/users/{username}'
+
+    response = requests.get(url)
+    data = response.json()
+
+    if response.status_code == 200:
+        name = data['name']
+        username = data['login']
+        followers = data['followers']
+        following = data['following']
+        public_repos = data['public_repos']
+        
+        print(f"Name: {name}")
+        print(f"Username: {username}")
+        print(f"Followers: {followers}")
+        print(f"Following: {following}")
+        print(f"Public Repos: {public_repos}")
+    else:
+        print(f'Error: {response.status_code}')
+
+def get_repo_data(username):
+    url = f'https://api.github.com/users/{username}/repos'
+    response = requests.get(url)
+    data = response.json()
+    if response.status_code == 200:
+        for repo in data:
+            name = repo['name']
+            number_of_commits = repo['size']
+            commit_score = min(number_of_commits / 1000 * 10, 10)
+            stars = repo['stargazers_count']
+            forks = repo['forks_count']
+            language = repo['language']
+            created_at = repo['created_at']
+            updated_at = repo['updated_at']
+            
+            print(f"Repo Name: {name}")
+            
+            print(f"Stars: {stars}")
+            print(f"Commit Score: {commit_score}")
+            print(f"Number of Commits: {number_of_commits}")
+            print(f"Forks: {forks}")
+            print(f"Language: {language}")
+            print(f"Created At: {created_at}")
+            print(f"Updated At: {updated_at}")
+            print('-' * 40)
+    else:
+        print(f'Error: {response.status_code}')
+
+get_repo_data('lothnic')
