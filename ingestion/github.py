@@ -35,11 +35,21 @@ def get_repo_data(username):
     url = f'https://api.github.com/users/{username}/repos'
     response = requests.get(url)
     data = response.json()
+    total_commits = 0
     if response.status_code == 200:
         for repo in data:
             name = repo['name']
-            number_of_commits = repo['size']
-            commit_score = min(number_of_commits / 1000 * 10, 10)
+            
+            # Get actual commit count for this repo (only commits by this user)
+            commits_url = f'https://api.github.com/repos/{username}/{name}/commits?author={username}'
+            commits_response = requests.get(commits_url)
+            
+            if commits_response.status_code == 200:
+                number_of_commits = len(commits_response.json())
+            else:
+                number_of_commits = 0  # If we can't access commits (private repo, etc.)
+            
+            total_commits += number_of_commits
             stars = repo['stargazers_count']
             forks = repo['forks_count']
             language = repo['language']
@@ -49,13 +59,13 @@ def get_repo_data(username):
             print(f"Repo Name: {name}")
             
             print(f"Stars: {stars}")
-            print(f"Commit Score: {commit_score}")
             print(f"Number of Commits: {number_of_commits}")
             print(f"Forks: {forks}")
             print(f"Language: {language}")
             print(f"Created At: {created_at}")
             print(f"Updated At: {updated_at}")
             print('-' * 40)
+        print(f'Total Commits: {total_commits}')
     else:
         print(f'Error: {response.status_code}')
 
