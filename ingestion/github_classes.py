@@ -56,8 +56,52 @@ class GitHubUser:
         else:
             print(f'Error: {response.status_code}')
 
+'''
+    def get_more_data(self):
+        url = f"https://api.github.com/users/{self.username}/repos"
+        response = self.make_github_request(url)
+        
+        if response.status_code == 200:
+            data = response.json()
+            for repo in data:
+                name = repo['name']
+                primary_language = repo['language'] 
+                
+                # Get languages for this repo
+                languages_url = f'https://api.github.com/repos/{self.username}/{name}/languages'
+                languages_response = self.make_github_request(languages_url)
+                
+                if languages_response.status_code == 200:
+                    languages_data = languages_response.json()
+                    all_languages = list(languages_data.keys())
+                else:
+                    all_languages = [primary_language] if primary_language else []
+
+                self.unique_langs.update(all_languages)
+
+                # Get commits for this repo (fixed: use 'name' not 'self.name')
+                commit_url = f'https://api.github.com/repos/{self.username}/{name}/commits?author={self.username}'
+                commit_response = self.make_github_request(commit_url)
+                
+                # Fixed: use 'commit_response' not 'commits_response'
+                if commit_response.status_code == 200:
+                    number_of_commits = len(commit_response.json())
+                    self.total_commits += number_of_commits
+                else:
+                    print(f"Could not get commits for {name}: {commit_response.status_code}")
+                    number_of_commits = 0
+                
+                # Add stars collection
+                self.total_stars += repo['stargazers_count']
+                
+                print(f"Repo: {name}, Commits: {number_of_commits}, Stars: {repo['stargazers_count']}")
+        else:
+            print(f'Error getting repositories: {response.status_code}')
+'''
+
 lothnic = GitHubUser('lothnic')
 lothnic.get_user_data()
+# lothnic.get_more_data()
 
 print(f"Name: {lothnic.name}")
 print(f"Username: {lothnic.username}")
@@ -66,3 +110,6 @@ print(f"Following: {lothnic.following}")
 print(f"Public Repos: {lothnic.public_repos}")
 print(f"Bio: {lothnic.bio}")
 print(f"Profile Picture: {lothnic.profile_picture}")
+# print(f"Distinct Languages: {list(set(lothnic.unique_langs))}")
+# print(f"Total Distinct Languages: {len(lothnic.unique_langs)}")
+# print(f'Total Commits: {lothnic.total_commits}')
