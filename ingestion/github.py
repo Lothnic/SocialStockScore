@@ -5,14 +5,10 @@ from dotenv import load_dotenv, find_dotenv
 
 username = 'lothnic'
 
-load_dotenv(find_dotenv())  # Load environment variables from .env file
-
-# Optional: Add your GitHub token here for higher rate limits
-# Get token from: https://github.com/settings/tokens
-GITHUB_TOKEN = os.getenv('GIT_TOKEN')  # Load token from environment variables
+load_dotenv(find_dotenv())
+GITHUB_TOKEN = os.getenv('GIT_TOKEN')
 
 def make_github_request(url):
-    """Make a GitHub API request with proper headers and error handling"""
     headers = {}
     if GITHUB_TOKEN:
         headers['Authorization'] = f'Bearer {GITHUB_TOKEN}'
