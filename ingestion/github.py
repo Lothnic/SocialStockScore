@@ -55,6 +55,31 @@ def get_user_data(username):
         if response.status_code == 403:
             print("This is likely a rate limit issue. Consider adding a GitHub token.")
 
+unique_langs= set()
+
+def get_lang_data(username):
+    url = f'https://api.github.com/users/{username}/repos'
+    response = requests.get(url)
+    data = response.json()
+    total_commits = 0
+    if response.status_code == 200:
+        for repo in data:
+            name = repo['name']
+            primary_language = repo['language'] 
+            
+            languages_url = f'https://api.github.com/repos/{username}/{name}/languages'
+            languages_response = requests.get(languages_url)
+            
+            if languages_response.status_code == 200:
+                languages_data = languages_response.json()
+                all_languages = list(languages_data.keys())
+            else:
+                all_languages = [primary_language] if primary_language else []
+
+            unique_langs.update(all_languages)
+    else:
+        print(f'Error: {response.status_code}')
+
 def get_repo_data(username):
     url = f'https://api.github.com/users/{username}/repos'
     response = make_github_request(url)
@@ -67,6 +92,7 @@ def get_repo_data(username):
     
     data = response.json()
     total_commits = 0
+    total_stars = 0
     
     for repo in data:
         name = repo['name']
@@ -84,24 +110,15 @@ def get_repo_data(username):
                 print("Rate limit hit while getting commits. Consider adding delays or a token.")
         
         total_commits += number_of_commits
-        stars = repo['stargazers_count']
-        forks = repo['forks_count']
-        language = repo['language']
-        created_at = repo['created_at']
-        updated_at = repo['updated_at']
+        total_stars += repo['stargazers_count']
         
-        print(f"Repo Name: {name}")
-        print(f"Stars: {stars}")
-        print(f"Number of Commits: {number_of_commits}")
-        print(f"Forks: {forks}")
-        print(f"Language: {language}")
-        print(f"Created At: {created_at}")
-        print(f"Updated At: {updated_at}")
-        print('-' * 40)
-        
-        # Add small delay to avoid hitting rate limits too quickly
-        time.sleep(0.5)
+
+        time.sleep(0.1)
     
     print(f'Total Commits: {total_commits}')
+    print(f'Total Stars: {total_stars}')
 
 get_repo_data('lothnic')
+get_lang_data('lothnic')
+cnt_langs = len(unique_langs)
+print(f"Total Distinct Languages: {cnt_langs}")
