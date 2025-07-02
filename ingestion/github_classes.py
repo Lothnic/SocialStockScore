@@ -56,7 +56,7 @@ class GitHubUser:
         else:
             print(f'Error: {response.status_code}')
 
-'''
+
     def get_more_data(self):
         url = f"https://api.github.com/users/{self.username}/repos"
         response = self.make_github_request(url)
@@ -97,11 +97,11 @@ class GitHubUser:
                 print(f"Repo: {name}, Commits: {number_of_commits}, Stars: {repo['stargazers_count']}")
         else:
             print(f'Error getting repositories: {response.status_code}')
-'''
+
 
 lothnic = GitHubUser('lothnic')
 lothnic.get_user_data()
-# lothnic.get_more_data()
+lothnic.get_more_data()
 
 print(f"Name: {lothnic.name}")
 print(f"Username: {lothnic.username}")
@@ -110,6 +110,6 @@ print(f"Following: {lothnic.following}")
 print(f"Public Repos: {lothnic.public_repos}")
 print(f"Bio: {lothnic.bio}")
 print(f"Profile Picture: {lothnic.profile_picture}")
-# print(f"Distinct Languages: {list(set(lothnic.unique_langs))}")
-# print(f"Total Distinct Languages: {len(lothnic.unique_langs)}")
-# print(f'Total Commits: {lothnic.total_commits}')
+print(f"Distinct Languages: {list(set(lothnic.unique_langs))}")
+print(f"Total Distinct Languages: {len(lothnic.unique_langs)}")
+print(f'Total Commits: {lothnic.total_commits}')
