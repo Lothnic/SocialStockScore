@@ -11,6 +11,6 @@ g = Github(auth=auth)
 
 user = g.get_user('lothnic')
 
-print(user.name())
+print(user.name)
 
 g.close()
