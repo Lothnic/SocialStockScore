@@ -1,13 +1,16 @@
 import praw
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 reddit = praw.Reddit(
-    client_id = 'EaREKYz5-PxQ3isphK-ngA',
-    client_secret = '1qVFcDbcCSFC16_B6kpiDECrjzIU-Q',
+    client_id = os.getenv('CLIENT_ID'),
+    client_secret = os.getenv('CLIENT_SECRET'),
     user_agent = 'SocialStockScore'
 )
 
-username = 'wrongdoerbubbly'
-
+username = str(input("Enter Reddit username: "))
 
 def fetch_user_data(username):
     reddit_user = reddit.redditor(username)
