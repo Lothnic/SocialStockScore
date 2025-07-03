@@ -56,25 +56,51 @@ class GithubUser:
         if not self._user:
             self.fetch_profile() 
         for repo in self._user.get_repos():
-            try:
-                print(repo.name)
-                print(repo.stargazers_count)
-                print(repo.language)
-                
+            try:                
                 # Filter commits by author (only commits made by this user)
                 user_commits = repo.get_commits(author=self._user)
                 user_commit_count = user_commits.totalCount
                 
-                print(f"User commits: {user_commit_count}")
                 self.total_stars += repo.stargazers_count
                 self.total_commits += user_commit_count
-                print(20*'-')
+                
+                # Get ALL languages used in this repo
+                try:
+                    languages = repo.get_languages()  # Returns dict like {'Python': 1234, 'JavaScript': 567}
+                    for language in languages.keys():
+                        self.unique_langs.add(language)
+                except Exception as lang_error:
+                    # Fallback to primary language if languages API fails
+                    if repo.language:
+                        self.unique_langs.add(repo.language)
+                    print(f"Could not get languages for {repo.name}: {lang_error}")
+
             except Exception as e:
                 print(f"Error fetching repo {repo.name} for {self.username}: {e}")
                 continue
+                
+    
+    def cal_score(self):
+        self.fetch_repos()
+        
+        # Calculate scores and store them as instance variables
+        self.commit_score = min(self.total_commits / 1000 * 10, 10)
+        self.lang_diversity = min(len(self.unique_langs) / 5 * 5, 5)
+        self.stars_score = min(self.total_stars / 50 * 10, 10)
+        self.profile_score = 5 if self.bio and self.profile_picture else 0
+        
+        gh_score = self.commit_score + self.lang_diversity + self.stars_score + self.profile_score
+        # return gh_score
+        print(f"GitHub Score: {gh_score}")
+        
+username = str(input("Enter GitHub username: "))
 
-
-user1 = GithubUser('lothnic')
-user1.fetch_repos()
-print(user1.total_commits)
-print(user1.total_stars)
+user1 = GithubUser(username)
+user1.cal_score()
+print(f"total_commits : { user1.total_commits}")
+print(f"commit_score : { user1.commit_score}")
+print(f"total_stars : { user1.total_stars}")
+print(f"star_score : { user1.stars_score}")
+print(f"language_diversity : { user1.lang_diversity}")
+print(f"profile_score : { user1.profile_score}")
+print(f"languages : {user1.unique_langs}")
