@@ -90,17 +90,10 @@ class GithubUser:
         self.profile_score = 5 if self.bio and self.profile_picture else 0
         
         gh_score = self.commit_score + self.lang_diversity + self.stars_score + self.profile_score
-        # return gh_score
-        print(f"GitHub Score: {gh_score}")
+        return gh_score
         
 username = str(input("Enter GitHub username: "))
 
 user1 = GithubUser(username)
-user1.cal_score()
-print(f"total_commits : { user1.total_commits}")
-print(f"commit_score : { user1.commit_score}")
-print(f"total_stars : { user1.total_stars}")
-print(f"star_score : { user1.stars_score}")
-print(f"language_diversity : { user1.lang_diversity}")
-print(f"profile_score : { user1.profile_score}")
-print(f"languages : {user1.unique_langs}")
+score = user1.cal_score()
+print(score)
