@@ -2,9 +2,10 @@
 - Completed Github scoring.
 - Implement it with FastAPI and basic streamlit app.
 
-# ~~REST APIS ~~ Library Used
+# ~~REST APIS~~ Library Used
 Using PyGithub Library cause it provides easier auth and repo access.
 
+### Previously used API endpoints
 
 - User data
 https://api.github.com/users/{username}

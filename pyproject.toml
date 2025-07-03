@@ -6,6 +6,8 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "dotenv>=0.9.9",
+    "linkedin-api>=2.3.1",
+    "praw>=7.8.1",
     "pygithub>=2.6.1",
     "requests>=2.32.4",
 ]
