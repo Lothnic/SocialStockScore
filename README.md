@@ -1,7 +1,11 @@
 # Whats next
-- Use Classes instead of functions for better state management.
+- Completed Github scoring.
+- Implement it with FastAPI and basic streamlit app.
 
-# REST APIS Used
+# ~~REST APIS ~~ Library Used
+Using PyGithub Library cause it provides easier auth and repo access.
+
+
 - User data
 https://api.github.com/users/{username}
 

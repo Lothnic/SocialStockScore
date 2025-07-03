@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 # stars_score = min(total_stars / 50 * 10, 10)
 # profile_score = 5 if bio and profile picture else 0
 
+# we get about 0.01 per commit
 
 class GithubUser:
     def __init__(self,username):
@@ -34,7 +35,7 @@ class GithubUser:
         if not token:
             raise ValueError("GIT_TOKEN not found in .env")
 
-        print(f"✅ Token loaded successfully: {token[:3]}...")  # Obfuscated for safety
+        print(f"Token loaded successfully: {token[:3]}...")
 
         self._auth = Auth.Token(token)
         self._client = Github(auth=self._auth)
@@ -57,20 +58,19 @@ class GithubUser:
             self.fetch_profile() 
         for repo in self._user.get_repos():
             try:                
-                # Filter commits by author (only commits made by this user)
+                # Filter commits only made by this user)
                 user_commits = repo.get_commits(author=self._user)
                 user_commit_count = user_commits.totalCount
                 
                 self.total_stars += repo.stargazers_count
                 self.total_commits += user_commit_count
                 
-                # Get ALL languages used in this repo
+                # Getting all languages used in the repository
                 try:
-                    languages = repo.get_languages()  # Returns dict like {'Python': 1234, 'JavaScript': 567}
+                    languages = repo.get_languages()
                     for language in languages.keys():
                         self.unique_langs.add(language)
                 except Exception as lang_error:
-                    # Fallback to primary language if languages API fails
                     if repo.language:
                         self.unique_langs.add(repo.language)
                     print(f"Could not get languages for {repo.name}: {lang_error}")
@@ -83,7 +83,6 @@ class GithubUser:
     def cal_score(self):
         self.fetch_repos()
         
-        # Calculate scores and store them as instance variables
         self.commit_score = min(self.total_commits / 1000 * 10, 10)
         self.lang_diversity = min(len(self.unique_langs) / 5 * 5, 5)
         self.stars_score = min(self.total_stars / 50 * 10, 10)
