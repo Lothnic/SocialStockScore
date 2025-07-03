@@ -1,6 +1,13 @@
 # Whats next
-- Completed Github scoring.
+- Update Reddit scoring
+- Try a postgresSQL database
+- design an automation pipeline
+- think of a way to add roasts based on the data
 - Implement it with FastAPI and basic streamlit app.
+
+# Whats done
+- Completed Github scoring.
+- Completed Reddit scoring (draft I)
 
 # ~~REST APIS~~ Library Used
 Using PyGithub Library cause it provides easier auth and repo access.
