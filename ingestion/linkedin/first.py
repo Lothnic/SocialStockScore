@@ -11,14 +11,16 @@ load_dotenv()
 password = os.getenv('LINKEDIN_PASS')
 api = Linkedin('thehorizondude@gmail.com', password)
 
-# GET a profile
-profile = api.get_profile('mayankjoshi0801')
-print(json.dumps(profile['headline'], indent=2, ensure_ascii=False))
+username = str(input("Enter LinkedIn username: "))
 
+# profile = api.get_profile(username)
+# print(json.dumps(profile['headline'], indent=2, ensure_ascii=False))
 
-
-# posts = api.get_profile_posts('mayankjoshi0801')
+# posts = api.get_profile_posts(username)
 
 # for i in range(len(posts)):
 #     post = posts[i]
 #     pprint.pprint(json.dumps(post['commentary']['text']['text'], indent=2, ensure_ascii=False))
+
+connections = api.get_profile_connections(username)
+print(f"Total connections: {len(connections)}")
