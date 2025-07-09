@@ -15,7 +15,7 @@ email = os.getenv('LINKEDIN_ID')
 password = os.getenv('LINKEDIN_PASS')
 api = Linkedin(email, password)
 
-username = str(input("Enter LinkedIn username: "))
+# username = str(input("Enter LinkedIn username: "))
 
 def cal_score(username):
     linkedin_score = 0
@@ -41,12 +41,17 @@ def cal_score(username):
 
     posts = api.get_profile_posts(username)
 
-    for i in range(len(posts)):
-        post = posts[i]
-        post_body = json.dumps(post['commentary']['text']['text'], indent=2, ensure_ascii=False)
-        count = sum(1 for word in buzzwords if word in post_body.lower())
-        linkedin_score -= min(count, 5)
-
+    avg_length = 0
+    if len(posts) > 0:
+        avg_length = sum(len(post['commentary']['text']['text']) for post in posts) / len(posts)
+        if avg_length > 750:
+            linkedin_score += 2
+            print(f"Average post length: {avg_length} characters, Score: -3")
+        elif avg_length > 500:
+            linkedin_score += 3
+        elif avg_length <= 250:
+            linkedin_score += 5
+            print(f"Average post length: {avg_length} characters, Score: +2")
 
     return linkedin_score
     
@@ -62,5 +67,5 @@ def cal_score(username):
 
 # connections = scrape_connections(username)
 
-print(cal_score(username))
+print(cal_score('mayankjoshi0801'))
 

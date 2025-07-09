@@ -22,12 +22,12 @@ def scrape_connections(username):
         page.fill("input#username", EMAIL)
         page.fill("input#password", PASSWORD)
         page.click("button[type='submit']")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_load_state("load")
         time.sleep(5)
 
         # --- STEP 2: OPEN profile ---
         page.goto(f"https://www.linkedin.com/in/{username}")
-        time.sleep(3)
+        page.wait_for_selector("span:has-text('connections')", timeout=10000)
 
         content = page.content()
 
