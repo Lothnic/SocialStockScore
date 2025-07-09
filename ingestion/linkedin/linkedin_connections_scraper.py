@@ -2,14 +2,14 @@ from playwright.sync_api import sync_playwright
 import time
 import json
 import os
+import re
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
 
-EMAIL = "thehorizondude@gmail.com"
+EMAIL = os.getenv('LINKEDIN_ID')
 PASSWORD = os.getenv("LINKEDIN_PASS")
-
-
 
 def scrape_connections(username):
     with sync_playwright() as p:
@@ -18,26 +18,25 @@ def scrape_connections(username):
         page = context.new_page()
 
         # --- STEP 1: LOGIN ---
-        print("[+] Logging into LinkedIn...")
         page.goto("https://www.linkedin.com/login")
         page.fill("input#username", EMAIL)
         page.fill("input#password", PASSWORD)
         page.click("button[type='submit']")
         page.wait_for_load_state("networkidle")
-        time.sleep(3)
+        time.sleep(5)
 
         # --- STEP 2: OPEN profile ---
-        print("[+] Navigating to user's page...")
         page.goto(f"https://www.linkedin.com/in/{username}")
-        time.sleep(2)
+        time.sleep(3)
 
         content = page.content()
 
         connection_text = page.locator("span:has-text('connections')").first.text_content()
 
-        net_connections = connection_text.split()[0].replace(',', '')
+        numbers_only = re.findall(r'\d+', connection_text.replace(',', ''))
         
         browser.close()
-        print(f"[+] Total connections: {net_connections}")
-        return int(net_connections)
+
+        net_connections = int(numbers_only[0])
+        return net_connections
 

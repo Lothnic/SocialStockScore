@@ -1,5 +1,6 @@
 from linkedin_api import Linkedin
 from dotenv import load_dotenv
+import re
 import os
 import pprint
 from linkedin_connections_scraper import scrape_connections
@@ -10,19 +11,56 @@ import json
 # Load environment variables from .env file
 load_dotenv()
 # Authenticate using any Linkedin user account credentials
+email = os.getenv('LINKEDIN_ID')
 password = os.getenv('LINKEDIN_PASS')
-api = Linkedin('thehorizondude@gmail.com', password)
+api = Linkedin(email, password)
 
 username = str(input("Enter LinkedIn username: "))
 
-profile = api.get_profile(username)
-print(json.dumps(profile['headline'], indent=2, ensure_ascii=False))
+def cal_score(username):
+    linkedin_score = 0
 
-posts = api.get_profile_posts(username)
+    connection = scrape_connections(username)
+    if(connection>=500):
+        linkedin_score += 5
+    elif(connection>=100):
+        linkedin_score += 3
+    elif(connection>=25):
+        linkedin_score += 1
 
-for i in range(len(posts)):
-    post = posts[i]
-    pprint.pprint(json.dumps(post['commentary']['text']['text'], indent=2, ensure_ascii=False))
+    profile = api.get_profile(username)
+    headline = json.dumps(profile['headline'], indent=2, ensure_ascii=False)
 
-connections = scrape_connections(username)
+    buzzwords = [
+    "enthusiast", "lifelong learner", "aspiring", "passionate",
+    "motivated", "visionary", "self-taught", "seeking opportunity",
+    "ninja", "hacker", "guru", "wizard"]
+
+    count = sum(1 for word in buzzwords if word in headline.lower())
+    linkedin_score -= min(count, 5)
+
+    posts = api.get_profile_posts(username)
+
+    for i in range(len(posts)):
+        post = posts[i]
+        post_body = json.dumps(post['commentary']['text']['text'], indent=2, ensure_ascii=False)
+        count = sum(1 for word in buzzwords if word in post_body.lower())
+        linkedin_score -= min(count, 5)
+
+
+    return linkedin_score
+    
+
+# profile = api.get_profile(username)
+# print(json.dumps(profile['headline'], indent=2, ensure_ascii=False))
+
+# posts = api.get_profile_posts(username)
+
+# for i in range(len(posts)):
+#     post = posts[i]
+#     pprint.pprint(json.dumps(post['commentary']['text']['text'], indent=2, ensure_ascii=False))
+
+# connections = scrape_connections(username)
+
+print(cal_score(username))
 
