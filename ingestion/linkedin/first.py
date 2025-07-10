@@ -15,7 +15,7 @@ email = os.getenv('LINKEDIN_ID')
 password = os.getenv('LINKEDIN_PASS')
 api = Linkedin(email, password)
 
-# username = str(input("Enter LinkedIn username: "))
+username = str(input("Enter LinkedIn username: "))
 
 def cal_score(username):
     linkedin_score = 0
@@ -56,16 +56,5 @@ def cal_score(username):
     return linkedin_score
     
 
-# profile = api.get_profile(username)
-# print(json.dumps(profile['headline'], indent=2, ensure_ascii=False))
-
-# posts = api.get_profile_posts(username)
-
-# for i in range(len(posts)):
-#     post = posts[i]
-#     pprint.pprint(json.dumps(post['commentary']['text']['text'], indent=2, ensure_ascii=False))
-
-# connections = scrape_connections(username)
-
-print(cal_score('mayankjoshi0801'))
+print(cal_score(username))
 
