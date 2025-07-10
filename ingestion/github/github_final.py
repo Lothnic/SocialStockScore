@@ -79,7 +79,6 @@ class GithubUser:
                 print(f"Error fetching repo {repo.name} for {self.username}: {e}")
                 continue
                 
-    
     def cal_score(self):
         self.fetch_repos()
         
@@ -91,8 +90,19 @@ class GithubUser:
         gh_score = self.commit_score + self.lang_diversity + self.stars_score + self.profile_score
         return gh_score
         
-username = str(input("Enter GitHub username: "))
+def score_github_user(username: str):
+    user = GithubUser(username)
+    score = user.cal_score()
 
-user1 = GithubUser(username)
-score = user1.cal_score()
-print(score)
+    # Return detailed breakdown
+    return round(score, 2), {
+        "Commits Last Year": user.total_commits,
+        "Unique Languages": len(user.unique_langs),
+        "Total Stars": user.total_stars,
+        "Bio Present": bool(user.bio),
+        "Profile Picture": bool(user.profile_picture),
+        "Commit Score": round(user.commit_score, 2),
+        "Lang Diversity Score": round(user.lang_diversity, 2),
+        "Stars Score": round(user.stars_score, 2),
+        "Profile Score": round(user.profile_score, 2)
+    }
