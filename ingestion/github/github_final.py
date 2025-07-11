@@ -95,14 +95,17 @@ def score_github_user(username: str):
     score = user.cal_score()
 
     # Return detailed breakdown
-    return round(score, 2), {
-        "Commits Last Year": user.total_commits,
-        "Unique Languages": len(user.unique_langs),
-        "Total Stars": user.total_stars,
-        "Bio Present": bool(user.bio),
-        "Profile Picture": bool(user.profile_picture),
-        "Commit Score": round(user.commit_score, 2),
-        "Lang Diversity Score": round(user.lang_diversity, 2),
-        "Stars Score": round(user.stars_score, 2),
-        "Profile Score": round(user.profile_score, 2)
-    }
+    return round(score, 2)
+    #, {
+    #     "Commits Last Year": user.total_commits,
+    #     "Unique Languages": len(user.unique_langs),
+    #     "Total Stars": user.total_stars,
+    #     "Bio Present": bool(user.bio),
+    #     "Profile Picture": bool(user.profile_picture),
+    #     "Commit Score": round(user.commit_score, 2),
+    #     "Lang Diversity Score": round(user.lang_diversity, 2),
+    #     "Stars Score": round(user.stars_score, 2),
+    #     "Profile Score": round(user.profile_score, 2)
+    # }
+
+print(score_github_user('ShashiBhushanRaj'))
