@@ -19,6 +19,6 @@ if st.button("Calculate Dev Score") and github_username and linkedin_username an
         social_credit_score += score_github_user(github_username)
         social_credit_score += cal_score(linkedin_username)
         social_credit_score += reddit_cal_score(reddit_username, *fetch_user_data(reddit_username))
-        st.write(f"Your Social credit score is: {round(social_credit_score,2)/60}")
+        st.write(f"Your Social credit score is: {round(social_credit_score,2)}/60")
     
     
