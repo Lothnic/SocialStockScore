@@ -10,7 +10,7 @@ reddit = praw.Reddit(
     user_agent = 'SocialStockScore'
 )
 
-username = str(input("Enter Reddit username: "))
+# username = str(input("Enter Reddit username: "))
 
 def fetch_user_data(username):
     reddit_user = reddit.redditor(username)
@@ -71,5 +71,4 @@ def cal_score(username, comments, posts):
 
     return round(score, 2)
 
-final_score = cal_score(username, *fetch_user_data(username))
-print(f"Reddit user {username} has a score of {final_score}/20")
+print(cal_score('wrongdoerbubbly', *fetch_user_data('wrongdoerbubbly')))

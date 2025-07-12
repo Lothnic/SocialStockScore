@@ -107,5 +107,3 @@ def score_github_user(username: str):
     #     "Stars Score": round(user.stars_score, 2),
     #     "Profile Score": round(user.profile_score, 2)
     # }
-
-print(score_github_user('ShashiBhushanRaj'))
